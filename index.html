@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css">
+    </link>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css">
+    </link>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .marker-cluster-small {
+            background-color: rgba(181, 226, 140, 0.6);
+        }
+
+        .marker-cluster-small div {
+            background-color: rgba(110, 204, 57, 0.6);
+        }
+
+        .marker-cluster-medium {
+            background-color: rgba(241, 211, 87, 0.6);
+        }
+
+        .marker-cluster-medium div {
+            background-color: rgba(240, 194, 12, 0.6);
+        }
+
+        .marker-cluster-large {
+            background-color: rgba(253, 156, 115, 0.6);
+        }
+
+        .marker-cluster-large div {
+            background-color: rgba(241, 128, 23, 0.6);
+        }
+
+        .marker-cluster {
+            background-clip: padding-box;
+            border-radius: 20px;
+        }
+
+        .marker-cluster div {
+            width: 30px;
+            height: 30px;
+            margin-left: 5px;
+            margin-top: 5px;
+
+            text-align: center;
+            border-radius: 15px;
+            font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+        }
+
+        .marker-cluster span {
+            line-height: 30px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+     
+    </script>
+
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <script>
+        let url =
+          "https://data.taipei/api/v1/dataset/fed30522-5a3e-4921-8674-c5fd5ebc023a?scope=resourceAquire";
+        fetch(url, {
+          method: "GET",
+        })
+          .then(function (response) {
+            return response.json();
+            // console.log(response);
+          })
+          .then(function (result) {
+            //   console.log(result);
+              printMarket(result);
+            // Toilet(result);
+          });
+        
+        var map = L.map('map', {
+            center: [25.098298, 121.53547],
+            zoom: 16
+        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        //載入初始位置
+
+
+        var greenIcon = new L.Icon({
+            iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        var markers = new L.MarkerClusterGroup().addTo(map);
+        
+
+        function printMarket(data){
+            console.log(data);
+            console.log(data.result.results[0]['經度']);
+            console.log(data.result.results[0]['緯度']);
+   
+            for(let i = 0; i < data.result.results.length; i++){
+
+        markers.addLayer(L.marker([data.result.results[i]['緯度'],data.result.results[i]['經度']], {icon: greenIcon}).bindPopup(`<h1>公廁名稱:${data.result.results[i]['公廁名稱']}</h1>`));
+
+            }
+
+        }
+    </script>
+</body>
+
+</html>
